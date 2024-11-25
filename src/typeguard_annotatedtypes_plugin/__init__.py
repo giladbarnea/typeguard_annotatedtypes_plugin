@@ -28,7 +28,7 @@ def check_predicate(
     try:
         check_failed = not predicate.func(value)
     except Exception as e:
-        raise TypeCheckError(f"with {value=!r} raised an error: {e!r}")
+        raise TypeCheckError(f"with {value=!r} raised an error: {e!r}") from None
     else:
         if check_failed:
             raise TypeCheckError(f"with {value=!r} failed {predicate}")

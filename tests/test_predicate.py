@@ -6,7 +6,7 @@ import typeguard
 from annotated_types import Predicate
 from typeguard import typechecked
 
-import typeguard_annotatedtypes_plugin  # noqa: F401
+import typeguard_annotatedtypes_plugin  # type: ignore # noqa: F401
 
 
 def _is_glob(path: str) -> bool:
@@ -17,17 +17,27 @@ predicate = Predicate(_is_glob)
 TGlob = Annotated[str, predicate]
 
 
-def test_predicate():
-    @typechecked
-    def foo(value: TGlob) -> None:
-        pass
+@typechecked
+def foo(value: TGlob) -> None:
+    pass
 
-    invalid_value = "hi"
+
+def test_predicate_accepts_valid_value():
+    foo("hi*")
+
+
+@pytest.mark.parametrize(
+    "invalid_case",
+    [
+        dict(value="hi", match="with value='{value}' failed {predicate}"),
+        dict(value=1, match="(int) is not an instance of str"),
+    ],
+)
+def test_predicate_raises_TypeCheckError(invalid_case):
+    value = invalid_case["value"]
+    match = invalid_case["match"]
     with pytest.raises(
         typeguard.TypeCheckError,
-        match=re.compile(re.escape(f"with value='{invalid_value}' failed {predicate}")),
+        match=re.compile(re.escape(match.format(value=value, predicate=predicate))),
     ):
-        foo("hi")
-        
-    valid_value = "hi*"
-    foo(valid_value)
+        foo(value)
