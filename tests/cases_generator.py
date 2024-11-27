@@ -126,15 +126,13 @@ class TestGenerator:
             "@pytest.mark.parametrize(",
             '    "invalid_case",',
             "    [",
-            "        [",
-            "            dict(",
-            "                value=invalid_value,",
-            '                match="with value={value!r} failed {annotated_type}",',
-            "            )",
-            f"            for invalid_value in {astor.to_source(case.invalid_cases).strip()}",
-            "        ],",
-            '        dict(value="hi", match="(str) is not an instance of int"),',
-            "    ],",
+            "        dict(",
+            "            value=invalid_value,",
+            '            match="with value={value!r} failed {annotated_type}",',
+            "        )",
+            f"        for invalid_value in {astor.to_source(case.invalid_cases).strip()}",
+            "    ]",
+            '    + [dict(value="hi", match="(str) is not an instance of int")]',
             ")",
             f"def test_{type_name}_raises_TypeCheckError(invalid_case):",
             "    value = invalid_case['value']",
@@ -163,6 +161,7 @@ class TestGenerator:
             "from typeguard import typechecked",
             "import annotated_types as at",
             "from typing import Iterator, Annotated, List, Dict, Set, Tuple",
+            "import typeguard_annotatedtypes_plugin  # type: ignore # noqa: F401",
             "",
             "",
         ]
@@ -174,13 +173,10 @@ class TestGenerator:
         for class_def in custom_classes:
             class_code = astor.to_source(class_def)
             class_definitions.append(class_code)
-        breakpoint()
         test_code = [self.generate_test_code(case) for case in cases]
 
         return "\n".join(imports + class_definitions + test_code)
 
-
-import pdbr
 
 test_generator = TestGenerator()
 try:
