@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import math
 import re
 import typing
@@ -11,6 +9,8 @@ import annotated_types as at
 import pytest
 import typeguard
 from typeguard import typechecked
+
+import typeguard_annotatedtypes_plugin  # type: ignore # noqa: F401
 
 
 class MyCustomGroupedMetadata(at.GroupedMetadata):
@@ -43,13 +43,9 @@ def test_Gt4_accepts_valid_value(valid_case):
         )
         for invalid_value in (4, 0, -1)
     ]
-    + [
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
-def test_Gt4_raises_TypeCheckError(
-    invalid_case: List[Dict[str, int | str]] | Dict[str, str],
-):
+def test_Gt4_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
     match = invalid_case["match"]
     annotated_type = typing.get_args(Gt4)[1]
@@ -81,15 +77,13 @@ def test_Gt0_5_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (0.5, 0.0, -0.1)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (0.5, 0.0, -0.1)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Gt0_5_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -123,15 +117,13 @@ def test_Gtdatetime2000_1_1_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [datetime(2000, 1, 1), datetime(1999, 12, 31)]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [datetime(2000, 1, 1), datetime(1999, 12, 31)]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Gtdatetime2000_1_1_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -165,15 +157,13 @@ def test_Gtdate2000_1_1_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [date(2000, 1, 1), date(1999, 12, 31)]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [date(2000, 1, 1), date(1999, 12, 31)]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Gtdate2000_1_1_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -207,15 +197,13 @@ def test_GtDecimal1_123_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [Decimal("1.123"), Decimal("0")]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [Decimal("1.123"), Decimal("0")]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_GtDecimal1_123_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -249,15 +237,13 @@ def test_Ge4_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (0, -1)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (0, -1)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Ge4_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -291,15 +277,13 @@ def test_Ge0_5_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (0.4, 0.0, -0.1)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (0.4, 0.0, -0.1)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Ge0_5_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -333,15 +317,13 @@ def test_Gedatetime2000_1_1_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [datetime(1998, 1, 1), datetime(1999, 12, 31)]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [datetime(1998, 1, 1), datetime(1999, 12, 31)]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Gedatetime2000_1_1_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -375,15 +357,13 @@ def test_Lt4_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (4, 5, 6, 1000, 4)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (4, 5, 6, 1000, 4)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Lt4_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -417,15 +397,13 @@ def test_Lt0_5_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (0.5, 0.6, 0.7, 0.8, 0.9)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (0.5, 0.6, 0.7, 0.8, 0.9)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Lt0_5_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -459,15 +437,13 @@ def test_Ltdatetime2000_1_1_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [datetime(2000, 1, 2), datetime(2000, 1, 3)]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [datetime(2000, 1, 2), datetime(2000, 1, 3)]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Ltdatetime2000_1_1_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -501,15 +477,13 @@ def test_Le4_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (5, 6, 1000)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (5, 6, 1000)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Le4_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -543,15 +517,13 @@ def test_Le0_5_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (0.6, 0.7, 0.8, 0.9)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (0.6, 0.7, 0.8, 0.9)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Le0_5_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -585,15 +557,13 @@ def test_Ledatetime2000_1_1_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [datetime(2000, 1, 2), datetime(2000, 1, 3)]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [datetime(2000, 1, 2), datetime(2000, 1, 3)]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Ledatetime2000_1_1_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -627,15 +597,13 @@ def test_Interval_gt4_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (4, 0, -1)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (4, 0, -1)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Interval_gt4_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -669,15 +637,13 @@ def test_Interval_gt4_lt10_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (4, 10, 1000, 0, -1)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (4, 10, 1000, 0, -1)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Interval_gt4_lt10_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -711,15 +677,13 @@ def test_Interval_ge0_5_le1_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (0.49, 1.1)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (0.49, 1.1)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Interval_ge0_5_le1_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -757,15 +721,13 @@ def test_Interval_gtdatetime2000_1_1_ledatetime2000_1_3_accepts_valid_value(vali
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [datetime(2000, 1, 1), datetime(2000, 1, 4)]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [datetime(2000, 1, 1), datetime(2000, 1, 4)]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Interval_gtdatetime2000_1_1_ledatetime2000_1_3_raises_TypeCheckError(
     invalid_case,
@@ -801,15 +763,13 @@ def test_MultipleOf_multiple_of3_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (1, 2, 4)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (1, 2, 4)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_MultipleOf_multiple_of3_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -843,15 +803,13 @@ def test_MultipleOf_multiple_of0_5_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (0.4, 1.1)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (0.4, 1.1)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_MultipleOf_multiple_of0_5_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -885,15 +843,13 @@ def test_MinLen3_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ("", "1", "12")
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ("", "1", "12")
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_MinLen3_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -927,15 +883,13 @@ def test_Len3_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ("", "1", "12")
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ("", "1", "12")
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len3_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -969,15 +923,13 @@ def test_MinLen3_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ([], [1], [1, 2])
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ([], [1], [1, 2])
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_MinLen3_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1011,15 +963,13 @@ def test_Len3_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ([], [1], [1, 2])
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ([], [1], [1, 2])
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len3_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1053,15 +1003,13 @@ def test_MaxLen4_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ("12345", "x" * 10)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ("12345", "x" * 10)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_MaxLen4_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1095,15 +1043,13 @@ def test_Len0_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ("12345", "x" * 10)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ("12345", "x" * 10)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len0_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1137,15 +1083,13 @@ def test_MaxLen4_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (["a"] * 5, ["b"] * 10)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (["a"] * 5, ["b"] * 10)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_MaxLen4_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1179,15 +1123,13 @@ def test_Len0_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (["a"] * 5, ["b"] * 10)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (["a"] * 5, ["b"] * 10)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len0_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1221,15 +1163,13 @@ def test_Len3_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ("", "1", "12", "123456", "x" * 10)
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ("", "1", "12", "123456", "x" * 10)
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len3_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1263,15 +1203,13 @@ def test_Len3_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ("12", "1234")
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ("12", "1234")
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len3_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1305,15 +1243,13 @@ def test_Len2_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [{}, {(1): 1}, {(1): 1, (2): 2, (3): 3, (4): 4}]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [{}, {(1): 1}, {(1): 1, (2): 2, (3): 3, (4): 4}]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len2_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1347,15 +1283,13 @@ def test_Len2_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in (set(), {1}, {1, 2, 3, 4})
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in (set(), {1}, {1, 2, 3, 4})
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len2_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1389,15 +1323,13 @@ def test_Len2_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ((), (1,), (1, 2, 3, 4))
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ((), (1,), (1, 2, 3, 4))
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Len2_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1431,15 +1363,13 @@ def test_TimezoneNone_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [datetime(2000, 1, 1, tzinfo=timezone.utc)]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [datetime(2000, 1, 1, tzinfo=timezone.utc)]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_TimezoneNone_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1473,15 +1403,13 @@ def test_Timezone____accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [datetime(2000, 1, 1)]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [datetime(2000, 1, 1)]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Timezone____raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1515,18 +1443,16 @@ def test_Timezonetimezone_utc_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [
-                datetime(2000, 1, 1),
-                datetime(2000, 1, 1, tzinfo=timezone(timedelta(hours=6))),
-            ]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [
+            datetime(2000, 1, 1),
+            datetime(2000, 1, 1, tzinfo=timezone(timedelta(hours=6))),
+        ]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Timezonetimezone_utc_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1560,18 +1486,16 @@ def test_TimezoneEuropeLondon_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [
-                datetime(2000, 1, 1),
-                datetime(2000, 1, 1, tzinfo=timezone(timedelta(hours=6))),
-            ]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [
+            datetime(2000, 1, 1),
+            datetime(2000, 1, 1, tzinfo=timezone(timedelta(hours=6))),
+        ]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_TimezoneEuropeLondon_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1605,15 +1529,13 @@ def test_Unit_unitm_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ("5m", "4.2m")
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ("5m", "4.2m")
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Unit_unitm_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1647,15 +1569,13 @@ def test_LowerCase_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ["", "A", "Boom"]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ["", "A", "Boom"]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_LowerCase_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1689,15 +1609,13 @@ def test_UpperCase_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ["", "a", "abc", "AbC"]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ["", "a", "abc", "AbC"]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_UpperCase_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1731,15 +1649,13 @@ def test_IsDigit_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ["", "ab", "a1b2"]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ["", "ab", "a1b2"]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsDigit_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1773,15 +1689,13 @@ def test_IsAscii_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in ["£100", "😊", "whatever 👀"]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in ["£100", "😊", "whatever 👀"]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsAscii_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1815,15 +1729,13 @@ def test_Predicatelambdaxx20_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [1, 3, 5]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [1, 3, 5]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Predicatelambdaxx20_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1857,15 +1769,13 @@ def test_IsFinite_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [math.nan, math.inf, -math.inf]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [math.nan, math.inf, -math.inf]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsFinite_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1899,15 +1809,13 @@ def test_IsNotFinite_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [1.23]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [1.23]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsNotFinite_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1941,15 +1849,13 @@ def test_IsNan_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [1.23, math.inf]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [1.23, math.inf]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsNan_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -1983,15 +1889,13 @@ def test_IsNotNan_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [math.nan]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [math.nan]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsNotNan_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -2025,15 +1929,13 @@ def test_IsInfinite_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [math.nan, 1.23]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [math.nan, 1.23]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsInfinite_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -2067,15 +1969,13 @@ def test_IsNotInfinite_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [math.inf]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [math.inf]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsNotInfinite_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -2109,15 +2009,13 @@ def test_IsInfinite_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [-math.inf, 1.23, math.nan]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [-math.inf, 1.23, math.nan]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_IsInfinite_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -2151,15 +2049,13 @@ def test_docAnumber_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in []
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in []
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_docAnumber_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
@@ -2193,15 +2089,13 @@ def test_MyCustomGroupedMetadata_accepts_valid_value(valid_case):
 @pytest.mark.parametrize(
     "invalid_case",
     [
-        [
-            dict(
-                value=invalid_value,
-                match="with value={value!r} failed {annotated_type}",
-            )
-            for invalid_value in [0.01, 1.5]
-        ],
-        dict(value="hi", match="(str) is not an instance of int"),
-    ],
+        dict(
+            value=invalid_value,
+            match="with value={value!r} failed {annotated_type}",
+        )
+        for invalid_value in [0.01, 1.5]
+    ]
+    + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_MyCustomGroupedMetadata_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
