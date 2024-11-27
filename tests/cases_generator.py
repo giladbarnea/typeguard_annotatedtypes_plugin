@@ -13,7 +13,9 @@ class ParsedCase:
 
 
 class TestGenerator:
-    def parse_cases_file(self, filename: str) -> List[ParsedCase]:
+    def parse_cases_file(
+        self, filename: str
+    ) -> tuple[List[ParsedCase], List[ast.ClassDef]]:
         with open(filename) as f:
             tree = ast.parse(f.read())
 
@@ -22,6 +24,20 @@ class TestGenerator:
             for node in ast.walk(tree)
             if isinstance(node, ast.FunctionDef) and node.name == "cases"
         )
+
+        # Find all custom class definitions
+        custom_classes: List[ast.ClassDef] = [
+            node
+            for node in cases_func.body
+            if isinstance(node, ast.ClassDef)
+            and any(
+                isinstance(base, ast.Name)
+                and base.id == "GroupedMetadata"
+                or isinstance(base, ast.Attribute)
+                and base.attr == "GroupedMetadata"
+                for base in node.bases
+            )
+        ]
 
         parsed_cases = []
         for node in cases_func.body:
@@ -39,7 +55,7 @@ class TestGenerator:
                             invalid_cases=case.args[2],
                         )
                     )
-        return parsed_cases
+        return parsed_cases, custom_classes
 
     def generate_type_name(self, annotation: ast.AST) -> str:
         if isinstance(annotation, ast.Subscript):
@@ -77,13 +93,27 @@ class TestGenerator:
         return "Unknown"
 
     def generate_test_code(self, case: ParsedCase) -> str:
-        type_name = self.generate_type_name(case.annotation)
+        type_name = (
+            self.generate_type_name(case.annotation)
+            .replace(".", "_")
+            .replace(",", "_")
+            .replace("(", "")
+            .replace(")", "")
+            .replace(" ", "")
+            .replace('"', "")
+            .replace("'", "")
+            .replace("/", "")
+            .replace("%", "")
+            .replace(":", "")
+            .replace("=", "")
+        )
+        type_name_for_func = type_name.lower()
 
         code = [
             f"{type_name} = {astor.to_source(case.annotation).strip()}",
             "",
             "@typechecked",
-            f"def expects_{type_name.lower()}(value: {type_name}) -> None:",
+            f"def expects_{type_name_for_func}(value: {type_name}) -> None:",
             "    pass",
             "",
             "@pytest.mark.parametrize(",
@@ -91,7 +121,7 @@ class TestGenerator:
             f"    {astor.to_source(case.valid_cases).strip()},",
             ")",
             f"def test_{type_name}_accepts_valid_value(valid_case):",
-            f"    expects_{type_name.lower()}(valid_case)",
+            f"    expects_{type_name_for_func}(valid_case)",
             "",
             "@pytest.mark.parametrize(",
             '    "invalid_case",',
@@ -116,7 +146,7 @@ class TestGenerator:
             "            re.escape(match.format(value=value, annotated_type=annotated_type))",
             "        ),",
             "    ):",
-            f"        expects_{type_name.lower()}(value)",
+            f"        expects_{type_name_for_func}(value)",
             "",
         ]
         return "\n".join(code)
@@ -126,17 +156,28 @@ class TestGenerator:
             "import re",
             "import typing",
             "import pytest",
+            "import typeguard",
+            "import math",
+            "from datetime import date, datetime, timedelta, timezone",
+            "from decimal import Decimal",
             "from typeguard import typechecked",
             "import annotated_types as at",
-            "from typing import Annotated",
+            "from typing import Iterator, Annotated, List, Dict, Set, Tuple",
             "",
             "",
         ]
 
-        cases = self.parse_cases_file(filename)
+        cases, custom_classes = self.parse_cases_file(filename)
+
+        # Generate class definitions
+        class_definitions = []
+        for class_def in custom_classes:
+            class_code = astor.to_source(class_def)
+            class_definitions.append(class_code)
+        breakpoint()
         test_code = [self.generate_test_code(case) for case in cases]
 
-        return "\n".join(imports + test_code)
+        return "\n".join(imports + class_definitions + test_code)
 
 
 import pdbr
@@ -144,9 +185,8 @@ import pdbr
 test_generator = TestGenerator()
 try:
     test_code = test_generator.generate_all_tests("tests/cases.py")
-    import pdbr
-
-    pdbr.set_trace()
+    with open("tests/test_all.py", "w") as f:
+        f.write(test_code)
 except Exception:
     import pdbr
 

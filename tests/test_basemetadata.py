@@ -64,7 +64,7 @@ Gt4 = Annotated[int, at.Gt(4)]
 
 
 @typechecked
-def expects_greaterthan_4(value: Gt4) -> None:
+def expects_greaterthan_4_(value: Gt4) -> None:
     pass
 
 
@@ -74,8 +74,8 @@ def expects_greaterthan_4(value: Gt4) -> None:
         (5, 6, 1000),
     ],
 )
-def test_Gt4_accepts_valid_value(valid_case):
-    expects_greaterthan_4(valid_case)
+def test_Gt4__accepts_valid_value(valid_case):
+    expects_greaterthan_4_(valid_case)
 
 
 @pytest.mark.parametrize(
@@ -92,7 +92,7 @@ def test_Gt4_accepts_valid_value(valid_case):
         dict(value="hi", match="(str) is not an instance of int"),
     ],
 )
-def test_Gt4_raises_TypeCheckError(invalid_case):
+def test_Gt4__raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
     match = invalid_case["match"]
     annotated_type = typing.get_args(Gt4)[1]
@@ -102,7 +102,7 @@ def test_Gt4_raises_TypeCheckError(invalid_case):
             re.escape(match.format(value=value, annotated_type=annotated_type))
         ),
     ):
-        expects_greaterthan_4(value)
+        expects_greaterthan_4_(value)
 
 
 def test_constraint_accepts_valid_value(constraint, valid_case, test_func):
@@ -120,11 +120,3 @@ def test_constraint_raises_TypeCheckError(constraint, invalid_case, test_func):
         ),
     ):
         test_func(value)
-
-
-TYPES_TO_TEST = {
-    "Gt4": {
-        "valid": test_Gt4_accepts_valid_value,
-        "invalid": test_Gt4_raises_TypeCheckError,
-    },
-}
