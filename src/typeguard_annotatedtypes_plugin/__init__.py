@@ -221,9 +221,9 @@ def check_len(
         raise TypeError
     if len(value) < constraint.min_inclusive:
         return False
-    if constraint.max_exclusive is not None and len(value) >= constraint.max_exclusive:
-        return False
-    return True
+    return not (
+        constraint.max_exclusive is not None and len(value) >= constraint.max_exclusive
+    )
 
 
 @type_checker

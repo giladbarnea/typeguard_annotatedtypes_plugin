@@ -17,10 +17,6 @@ import annotated_types as at
 
 
 class Case(NamedTuple):
-    """
-    A test case for `annotated_types`.
-    """
-
     annotation: Any
     valid_cases: Iterable[Any]
     invalid_cases: Iterable[Any]

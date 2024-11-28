@@ -28,7 +28,7 @@ def expects_gt4(value: Gt4) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (5, 6, 1000),
+    [5, 6, 1000],
 )
 def test_Gt4_accepts_valid_value(valid_case):
     expects_gt4(valid_case)
@@ -68,7 +68,7 @@ def expects_gt0_5(value: Gt0_5) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (0.6, 0.7, 0.8, 0.9),
+    [0.6, 0.7, 0.8, 0.9],
 )
 def test_Gt0_5_accepts_valid_value(valid_case):
     expects_gt0_5(valid_case)
@@ -228,7 +228,7 @@ def expects_ge4(value: Ge4) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (4, 5, 6, 1000, 4),
+    [4, 5, 6, 1000],
 )
 def test_Ge4_accepts_valid_value(valid_case):
     expects_ge4(valid_case)
@@ -268,7 +268,7 @@ def expects_ge0_5(value: Ge0_5) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (0.5, 0.6, 0.7, 0.8, 0.9),
+    [0.5, 0.6, 0.7, 0.8, 0.9],
 )
 def test_Ge0_5_accepts_valid_value(valid_case):
     expects_ge0_5(valid_case)
@@ -348,7 +348,7 @@ def expects_lt4(value: Lt4) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (0, -1),
+    [0, -1],
 )
 def test_Lt4_accepts_valid_value(valid_case):
     expects_lt4(valid_case)
@@ -388,7 +388,7 @@ def expects_lt0_5(value: Lt0_5) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (0.4, 0.0, -0.1),
+    [0.4, 0.0, -0.1],
 )
 def test_Lt0_5_accepts_valid_value(valid_case):
     expects_lt0_5(valid_case)
@@ -428,7 +428,7 @@ def expects_ltdatetime2000_1_1(value: Ltdatetime2000_1_1) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    [datetime(1999, 12, 31), datetime(1999, 12, 31)],
+    [datetime(1999, 12, 31)],
 )
 def test_Ltdatetime2000_1_1_accepts_valid_value(valid_case):
     expects_ltdatetime2000_1_1(valid_case)
@@ -468,7 +468,7 @@ def expects_le4(value: Le4) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (4, 0, -1),
+    [4, 0, -1],
 )
 def test_Le4_accepts_valid_value(valid_case):
     expects_le4(valid_case)
@@ -508,7 +508,7 @@ def expects_le0_5(value: Le0_5) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (0.5, 0.0, -0.1),
+    [0.5, 0.0, -0.1],
 )
 def test_Le0_5_accepts_valid_value(valid_case):
     expects_le0_5(valid_case)
@@ -588,7 +588,7 @@ def expects_interval_gt4(value: Interval_gt4) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (5, 6, 1000),
+    [5, 6, 1000],
 )
 def test_Interval_gt4_accepts_valid_value(valid_case):
     expects_interval_gt4(valid_case)
@@ -628,7 +628,7 @@ def expects_interval_gt4_lt10(value: Interval_gt4_lt10) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (5, 6),
+    [5, 6],
 )
 def test_Interval_gt4_lt10_accepts_valid_value(valid_case):
     expects_interval_gt4_lt10(valid_case)
@@ -668,7 +668,7 @@ def expects_interval_ge0_5_le1(value: Interval_ge0_5_le1) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (0.5, 0.9, 1),
+    [0.5, 0.9, 1],
 )
 def test_Interval_ge0_5_le1_accepts_valid_value(valid_case):
     expects_interval_ge0_5_le1(valid_case)
@@ -754,7 +754,7 @@ def expects_multipleof_multiple_of3(value: MultipleOf_multiple_of3) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (0, 3, 9),
+    [0, 3, 9],
 )
 def test_MultipleOf_multiple_of3_accepts_valid_value(valid_case):
     expects_multipleof_multiple_of3(valid_case)
@@ -794,7 +794,7 @@ def expects_multipleof_multiple_of0_5(value: MultipleOf_multiple_of0_5) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (0, 0.5, 1, 1.5),
+    [0, 0.5, 1, 1.5],
 )
 def test_MultipleOf_multiple_of0_5_accepts_valid_value(valid_case):
     expects_multipleof_multiple_of0_5(valid_case)
@@ -834,7 +834,7 @@ def expects_minlen3_str(value: MinLen3Str) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ("123", "1234", "x" * 10),
+    ["123", "1234", "x" * 10],
 )
 def test_MinLen3Str_accepts_valid_str_value(valid_case):
     expects_minlen3_str(valid_case)
@@ -874,7 +874,7 @@ def expects_len3_str(value: Len3Str) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ("123", "1234", "x" * 10),
+    ["123", "1234", "x" * 10],
 )
 def test_Len3Str_accepts_valid_str_value(valid_case):
     expects_len3_str(valid_case)
@@ -914,7 +914,7 @@ def expects_minlen3_list(value: MinLen3List) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ([1, 2, 3], [1, 2, 3, 4], [1] * 10),
+    [[1, 2, 3], [1, 2, 3, 4], [1] * 10],
 )
 def test_MinLen3List_accepts_valid_list_value(valid_case):
     expects_minlen3_list(valid_case)
@@ -954,7 +954,7 @@ def expects_len3_list(value: Len3List) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ([1, 2, 3], [1, 2, 3, 4], [1] * 10),
+    [[1, 2, 3], [1, 2, 3, 4], [1] * 10],
 )
 def test_Len3List_accepts_valid_list_value(valid_case):
     expects_len3_list(valid_case)
@@ -994,7 +994,7 @@ def expects_maxlen4_str(value: MaxLen4Str) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ("", "1234"),
+    ["", "1234"],
 )
 def test_MaxLen4Str_accepts_valid_str_value(valid_case):
     expects_maxlen4_str(valid_case)
@@ -1034,7 +1034,7 @@ def expects_len0_str(value: Len0Str) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ("", "1234"),
+    ["", "1234"],
 )
 def test_Len0Str_accepts_valid_value(valid_case):
     expects_len0_str(valid_case)
@@ -1074,7 +1074,7 @@ def expects_maxlen4_list(value: MaxLen4List) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ([], ["a", "bcdef"], ["a", "b", "c"]),
+    [[], ["a", "bcdef"], ["a", "b", "c"]],
 )
 def test_MaxLen4List_accepts_valid_value(valid_case):
     expects_maxlen4_list(valid_case)
@@ -1114,7 +1114,7 @@ def expects_len0_list(value: Len0List) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ([], ["a", "bcdef"], ["a", "b", "c"]),
+    [[], ["a", "bcdef"], ["a", "b", "c"]],
 )
 def test_Len0List_accepts_valid_value(valid_case):
     expects_len0_list(valid_case)
@@ -1154,7 +1154,7 @@ def expects_len3to5_str(value: Len3to5Str) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ("123", "12345"),
+    ["123", "12345"],
 )
 def test_Len3to5_str_accepts_valid_value(valid_case):
     expects_len3to5_str(valid_case)
@@ -1194,7 +1194,7 @@ def expects_len3to3_str(value: Len3to3Str) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ("123",),
+    ["123"],
 )
 def test_Len3to3_str_accepts_valid_value(valid_case):
     expects_len3to3_str(valid_case)
@@ -1274,7 +1274,7 @@ def expects_len2_set(value: Len2Set) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ({1, 2}, {1, 2, 3}),
+    [{1, 2}, {1, 2, 3}],
 )
 def test_Len2Set_accepts_valid_value(valid_case):
     expects_len2_set(valid_case)
@@ -1314,7 +1314,7 @@ def expects_len2_tuple(value: Len2Tuple) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    ((1, 2), (1, 2, 3)),
+    [(1, 2), (1, 2, 3)],
 )
 def test_Len2Tuple_accepts_valid_value(valid_case):
     expects_len2_tuple(valid_case)
@@ -1520,7 +1520,7 @@ def expects_unit_unitm(value: Unit_unitm) -> None:
 
 @pytest.mark.parametrize(
     "valid_case",
-    (5, 4.2),
+    [5, 4.2],
 )
 def test_Unit_unitm_accepts_valid_value(valid_case):
     expects_unit_unitm(valid_case)

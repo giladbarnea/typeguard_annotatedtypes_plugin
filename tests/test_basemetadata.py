@@ -11,9 +11,7 @@ import typeguard_annotatedtypes_plugin  # type: ignore # noqa: F401
 
 
 class Case(NamedTuple):
-    """
-    A test case for `annotated_types`.
-    """
+    """A test case for `annotated_types`."""
 
     annotation: Any
     valid_cases: Iterable[Any]
