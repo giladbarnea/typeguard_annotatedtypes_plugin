@@ -36,9 +36,10 @@ from annotated_types import (
 from typeguard import (
     TypeCheckError,
     TypeCheckMemo,
-    check_type,
     checker_lookup_functions,
 )
+
+from .util import print_input_output
 
 HashableNot = dataclass(Not, frozen=True)
 
@@ -103,59 +104,6 @@ TYPE_CONSTRAINTS: tuple[
 )
 
 
-# region debug
-INDENT_COUNT = 0
-
-
-def print_input_output(func):
-    __tracebackhide__ = True
-
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        global INDENT_COUNT
-        __tracebackhide__ = True
-        args_str = [f"{arg!r}" for arg in args]
-        kwargs_str = [f"{k}={v!r}" for k, v in kwargs.items()]
-        all_args = ", ".join(args_str + kwargs_str)
-
-        indent = "  " * INDENT_COUNT
-        print(
-            f"{indent}\033[38;5;246m➡️  {func.__name__}({all_args})\033[0m"
-        )  # Gray color
-
-        INDENT_COUNT += 1
-        try:
-            result = func(*args, **kwargs)
-        finally:
-            INDENT_COUNT -= 1
-
-        indent = "  " * INDENT_COUNT
-        color = "67" if result is None else "75"
-        if isinstance(result, functools.partial):
-            result_str = f"{result.func.__name__}(..., {', '.join(f'{k}={v!r}' for k, v in result.keywords.items())})"
-            print(
-                f"{indent}\033[38;5;{color}m⬅️  {func.__name__} ==> {result_str}\033[0m"
-            )
-        else:
-            print(f"{indent}\033[38;5;{color}m⬅️  {func.__name__} ==> {result!r}\033[0m")
-        return result
-
-    return wrapper
-
-
-def on_exception_return_none(func):
-    __tracebackhide__ = True
-
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except:  # noqa: E722
-            return None
-
-    return wrapper
-
-
 R = TypeVar("R")
 
 
@@ -163,9 +111,6 @@ def partial(func: Callable[..., R], *args: Any, **kwargs: Any):
     partial_function: functools.partial[R] = functools.partial(func, *args, **kwargs)
     wrapper = functools.wraps(func)
     return wrapper(partial_function)
-
-
-# endregion
 
 
 # region checkers
@@ -369,9 +314,9 @@ def match_annotated_type(
         for instance in instances:
             instance_type = type(instance)
             if issubclass(instance_type, annotated_type):
-                assert isinstance(
-                    instance, annotated_type
-                ), "Well, the issubclass cant be replaced by isinstance"
+                assert isinstance(instance, annotated_type), (
+                    "Well, the issubclass cant be replaced by isinstance"
+                )
                 return instance, annotated_type
             assert not isinstance(instance_type, annotated_type), (
                 f"instance_type {instance_type} ({type(instance_type)}) is an instance of {annotated_type} ({type(annotated_type)}), "
@@ -388,13 +333,11 @@ def annotated_type_lookup(
     if not (annotated_type := match_annotated_type(origin_type, *args, *extras)):
         return None
 
-    constraint, constraint_type = annotated_type
+    constraint, _constraint_type = annotated_type
     return partial(check_annotated_type, annotated_type=constraint)
 
 
-checker_lookup_functions.extend(
-    [
-        # predicate_checker_lookup,
-        annotated_type_lookup,
-    ]
-)
+checker_lookup_functions.extend([
+    # predicate_checker_lookup,
+    annotated_type_lookup,
+])
