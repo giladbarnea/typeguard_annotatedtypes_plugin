@@ -10,7 +10,6 @@ def print_input_output(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         global INDENT_COUNT
-        __tracebackhide__ = True
         args_str = [f"{arg!r}" for arg in args]
         kwargs_str = [f"{k}={v!r}" for k, v in kwargs.items()]
         all_args = ", ".join(args_str + kwargs_str)
