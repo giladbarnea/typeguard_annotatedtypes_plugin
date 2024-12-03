@@ -1,38 +1,9 @@
 import functools
 import typing
-from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Callable, Literal, Optional, TypeVar, Union
+from typing import Any, Callable, Optional, TypeVar, Union
 
-import annotated_types
-from annotated_types import (
-    BaseMetadata,
-    Ge,
-    GroupedMetadata,
-    Gt,
-    Interval,
-    IsAscii,
-    IsDigit,
-    IsDigits,
-    IsFinite,
-    IsInfinite,
-    IsNan,
-    IsNotFinite,
-    IsNotInfinite,
-    IsNotNan,
-    Le,
-    Len,
-    LowerCase,
-    Lt,
-    MaxLen,
-    MinLen,
-    MultipleOf,
-    Not,
-    Predicate,
-    Timezone,
-    Unit,
-    UpperCase,
-)
+import annotated_types as at
 from typeguard import (
     TypeCheckError,
     TypeCheckMemo,
@@ -41,92 +12,79 @@ from typeguard import (
 
 from .util import print_input_output
 
-HashableNot = dataclass(Not, frozen=True)
+# HashableNot = dataclass(Not, frozen=True)
 
-ConstraintType = Union[
-    BaseMetadata,
-    GroupedMetadata,
-    HashableNot,
-    Predicate,
-    LowerCase,
-    UpperCase,
-    IsDigit,
-    IsDigits,
-    IsAscii,
-    IsFinite,
-    IsNotFinite,
-    IsNan,
-    IsNotNan,
-    IsInfinite,
-    IsNotInfinite,
-]
-TYPE_CONSTRAINTS: tuple[
-    BaseMetadata,
-    GroupedMetadata,
-    Not,
-    Predicate,
-    LowerCase,
-    UpperCase,
-    IsDigit,
-    IsDigits,
-    IsAscii,
-    IsFinite,
-    IsNotFinite,
-    IsNan,
-    IsNotNan,
-    IsInfinite,
-    IsNotInfinite,
-] = (
-    Ge,
-    Gt,
-    Interval,
-    IsAscii,
-    IsDigit,
-    IsDigits,
-    IsFinite,
-    IsInfinite,
-    IsNan,
-    IsNotFinite,
-    IsNotInfinite,
-    IsNotNan,
-    Le,
-    Len,
-    LowerCase,
-    Lt,
-    MaxLen,
-    MinLen,
-    MultipleOf,
-    Not,
-    Predicate,
-    Timezone,
-    Unit,
-    UpperCase,
+# ConstraintType = Union[
+#     BaseMetadata,
+#     GroupedMetadata,
+#     # HashableNot,
+#     Predicate,
+#     LowerCase,
+#     UpperCase,
+#     IsDigit,
+#     IsDigits,
+#     IsAscii,
+#     IsFinite,
+#     # IsNotFinite,
+#     IsNan,
+#     # IsNotNan,
+#     IsInfinite,
+#     # IsNotInfinite,
+# ]
+TYPE_CONSTRAINTS = (
+    at.Ge,
+    at.Gt,
+    at.Interval,
+    at.IsAscii,
+    at.IsDigit,
+    at.IsDigits,
+    at.IsFinite,
+    at.IsInfinite,
+    at.IsNan,
+    at.IsNotFinite,
+    at.IsNotInfinite,
+    at.IsNotNan,
+    at.Le,
+    at.Len,
+    at.LowerCase,
+    at.Lt,
+    at.MaxLen,
+    at.MinLen,
+    at.MultipleOf,
+    at.Not,
+    at.Predicate,
+    at.Timezone,
+    at.Unit,
+    at.UpperCase,
 )
 
 
 R = TypeVar("R")
 
 
-def partial(func: Callable[..., R], *args: Any, **kwargs: Any):
-    partial_function: functools.partial[R] = functools.partial(func, *args, **kwargs)
-    wrapper = functools.wraps(func)
-    return wrapper(partial_function)
+# def partial(func: Callable[..., R], *args: Any, **kwargs: Any):
+#     partial_function: functools.partial[R] = functools.partial(func, *args, **kwargs)
+#     wrapper = functools.wraps(func)
+#     return wrapper(partial_function)
 
 
 # region checkers
-Constraint = TypeVar("Constraint", bound=ConstraintType)
+Constraint = TypeVar(
+    "Constraint",
+    # bound=ConstraintType
+)
 CheckerFn = Callable[[Any, Any, tuple[Any, ...], TypeCheckMemo, Constraint], bool]
 
 
-def type_checker(checker: CheckerFn[Constraint]) -> CheckerFn[Constraint]:
+def type_checker(checker):
     @functools.wraps(checker)
     def wrapper(
-        value: Any,
-        origin_type: Any,
-        args: tuple[Any, ...],
-        memo: TypeCheckMemo,
-        constraint: Constraint,
-    ) -> Literal[True]:
+        value,
+        origin_type,
+        args,
+        memo,
+        constraint,
+    ):
         # check_type(
         #     value,
         #     origin_type,
@@ -134,10 +92,15 @@ def type_checker(checker: CheckerFn[Constraint]) -> CheckerFn[Constraint]:
         #     typecheck_fail_callback=memo.config.typecheck_fail_callback,
         #     collection_check_strategy=memo.config.collection_check_strategy,
         # )
+        # check_type_internal(
+        #     value,
+        #     origin_type,
+        #     memo
+        # )
         try:
             check_ok = checker(value, origin_type, args, memo, constraint)
         except Exception as e:
-            raise TypeCheckError(f"with {value=!r} raised an error: {e!r}") from None
+            raise TypeCheckError(f"with {value=!r} raised an error: {e!r}")
         else:
             if not check_ok:
                 raise TypeCheckError(f"with {value=!r} failed {constraint}")
@@ -148,13 +111,12 @@ def type_checker(checker: CheckerFn[Constraint]) -> CheckerFn[Constraint]:
 
 @type_checker
 def check_gt(
-    value: Any,
-    origin_type: Any,
-    args: tuple[Any, ...],
-    memo: TypeCheckMemo,
-    constraint: annotated_types.Gt,
+    value,
+    origin_type,
+    args,
+    memo,
+    constraint: at.Gt,
 ) -> bool:
-    assert isinstance(constraint, annotated_types.Gt)
     return value > constraint.gt
 
 
@@ -164,9 +126,8 @@ def check_lt(
     origin_type: Any,
     args: tuple[Any, ...],
     memo: TypeCheckMemo,
-    constraint: annotated_types.Lt,
+    constraint: at.Lt,
 ) -> bool:
-    assert isinstance(constraint, annotated_types.Lt)
     return value < constraint.lt
 
 
@@ -176,21 +137,19 @@ def check_ge(
     origin_type: Any,
     args: tuple[Any, ...],
     memo: TypeCheckMemo,
-    constraint: annotated_types.Ge,
+    constraint: at.Ge,
 ) -> bool:
-    assert isinstance(constraint, annotated_types.Ge)
     return value >= constraint.ge
 
 
 @type_checker
 def check_le(
-    value: Any,
-    origin_type: Any,
-    args: tuple[Any, ...],
-    memo: TypeCheckMemo,
-    constraint: annotated_types.Le,
+    value,
+    origin_type,
+    args,
+    memo,
+    constraint: at.Le,
 ) -> bool:
-    assert isinstance(constraint, annotated_types.Le)
     return value <= constraint.le
 
 
@@ -200,9 +159,9 @@ def check_multiple_of(
     origin_type: Any,
     args: tuple[Any, ...],
     memo: TypeCheckMemo,
-    constraint: annotated_types.MultipleOf,
+    constraint: at.MultipleOf,
 ) -> bool:
-    assert isinstance(constraint, annotated_types.MultipleOf)
+    assert isinstance(constraint, at.MultipleOf)
     return value % constraint.multiple_of == 0
 
 
@@ -212,11 +171,11 @@ def check_len(
     origin_type: Any,
     args: tuple[Any, ...],
     memo: TypeCheckMemo,
-    constraint: Union[slice, annotated_types.Len],
+    constraint: Union[slice, at.Len],
 ) -> bool:
     if isinstance(constraint, slice):
-        constraint = annotated_types.Len(constraint.start or 0, constraint.stop)
-    assert isinstance(constraint, annotated_types.Len)
+        constraint = at.Len(constraint.start or 0, constraint.stop)
+    assert isinstance(constraint, at.Len)
     if constraint.min_inclusive is None:
         raise TypeError
     if len(value) < constraint.min_inclusive:
@@ -232,9 +191,9 @@ def check_timezone(
     origin_type: Any,
     args: tuple[Any, ...],
     memo: TypeCheckMemo,
-    constraint: annotated_types.Timezone,
+    constraint: at.Timezone,
 ) -> None:
-    assert isinstance(constraint, annotated_types.Timezone)
+    assert isinstance(constraint, at.Timezone)
     assert isinstance(value, datetime)
     if isinstance(constraint.tz, str):
         return value.tzinfo is not None and constraint.tz == value.tzname()
@@ -246,54 +205,61 @@ def check_timezone(
     return value.tzinfo is not None
 
 
-@type_checker
+# @type_checker
 def check_predicate(
     value: Any,
     origin_type: Any,
     args: tuple[Any, ...],
     memo: TypeCheckMemo,
-    constraint: Predicate,
+    constraint: at.Predicate,
 ) -> None:
-    assert isinstance(constraint, Predicate)
-    return constraint.func(value)
+    try:
+        check_ok = constraint.func(value)
+        # check_ok = checker(value, origin_type, args, memo, constraint)
+    except Exception as e:
+        raise TypeCheckError(f"with {value=!r} raised an error: {e!r}") from None
+    else:
+        if not check_ok:
+            raise TypeCheckError(f"with {value=!r} failed {constraint}")
+        return True
+    # assert isinstance(constraint, Predicate)
+    # return constraint.func(value)
 
 
 # endregion
 
-VALIDATORS: dict[ConstraintType, CheckerFn] = {
-    annotated_types.Gt: check_gt,
-    annotated_types.Lt: check_lt,
-    annotated_types.Ge: check_ge,
-    annotated_types.Le: check_le,
-    annotated_types.MultipleOf: check_multiple_of,
-    annotated_types.Predicate: check_predicate,
-    annotated_types.Len: check_len,
-    annotated_types.Timezone: check_timezone,
+VALIDATORS: dict[Any, CheckerFn] = {
+    at.Gt: check_gt,
+    at.Lt: check_lt,
+    at.Ge: check_ge,
+    at.Le: check_le,
+    at.MultipleOf: check_multiple_of,
+    at.Predicate: check_predicate,
+    at.Len: check_len,
+    at.Timezone: check_timezone,
     slice: check_len,
 }
 
 
-@print_input_output
+# @print_input_output
 def check_annotated_type(
-    value: Any,
-    origin_type: Any,
-    args: tuple[Any, ...],
-    memo: TypeCheckMemo,
+    value,
+    origin_type,
+    args,
+    memo,
     *,
-    annotated_type: Constraint,
+    annotated_type,
 ) -> None:
     checker = VALIDATORS[type(annotated_type)]
     checker(value, origin_type, args, memo, annotated_type)
 
 
 @print_input_output
-def match_annotated_type(
-    origin_type, *instances
-) -> Optional[tuple[Constraint, ConstraintType]]:
+def match_annotated_type(origin_type, *instances) -> Optional[tuple]:
     for annotated_type in TYPE_CONSTRAINTS:
         if typing.get_origin(annotated_type) is typing.Annotated:
             extras = typing.get_args(annotated_type)
-            predicate: ConstraintType = extras[1]
+            predicate: Any = extras[1]
             # annotated_type_extras: list[tuple[Constraint, ConstraintType]] = list(
             #     filter(None, [match_annotated_type(extra) for extra in extras])
             # )
@@ -326,18 +292,13 @@ def match_annotated_type(
 
 
 @print_input_output
-def annotated_type_lookup(
-    origin_type: Any, args: tuple[Any, ...], extras: tuple[Any, ...]
-) -> Optional[functools.partial[Literal[None]]]:
+def annotated_type_lookup(origin_type, args, extras):
     annotated_type = None
     if not (annotated_type := match_annotated_type(origin_type, *args, *extras)):
         return None
 
     constraint, _constraint_type = annotated_type
-    return partial(check_annotated_type, annotated_type=constraint)
+    return functools.partial(check_annotated_type, annotated_type=constraint)
 
 
-checker_lookup_functions.extend([
-    # predicate_checker_lookup,
-    annotated_type_lookup,
-])
+checker_lookup_functions.insert(0, annotated_type_lookup)
