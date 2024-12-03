@@ -1,7 +1,7 @@
 [project]
 name = "typeguard-annotatedtypes-plugin"
 version = "0.1.0"
-description = "Add your description here"
+description = "An annotated-types plugin for typeguard."
 readme = "README.md"
 authors = [
     { name = "Gilad Barnea", email = "giladbrn@gmail.com" }
