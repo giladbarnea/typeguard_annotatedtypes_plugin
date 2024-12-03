@@ -34,17 +34,21 @@ def test_Ge4_accepts_valid_value(valid_case):
             match="with value={value!r} failed {annotated_type}",
         )
         for invalid_value in (0, -1)
+    ]
+    + [
+        dict(value="hi", match="{value!r} is not an instance of {origin_type.__name__}")
     ],
-    # + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Ge4_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
     match = invalid_case["match"]
-    annotated_type = typing.get_args(Ge4)[1]
+    origin_type, annotated_type = typing.get_args(Ge4)
     with pytest.raises(
         typeguard.TypeCheckError,
-        match=re.compile(
-            re.escape(match.format(value=value, annotated_type=annotated_type))
+        match=re.escape(
+            match.format(
+                value=value, annotated_type=annotated_type, origin_type=origin_type
+            )
         ),
     ):
         expects_ge4(value)
@@ -76,17 +80,21 @@ def test_Ge0dot5_accepts_valid_value(valid_case):
             match="with value={value!r} failed {annotated_type}",
         )
         for invalid_value in (0.4, 0.0, -0.1)
+    ]
+    + [
+        dict(value="hi", match="{value!r} is not an instance of {origin_type.__name__}")
     ],
-    # + [dict(value="hi", match="(str) is not an instance of int")],
 )
 def test_Ge0dot5_raises_TypeCheckError(invalid_case):
     value = invalid_case["value"]
     match = invalid_case["match"]
-    annotated_type = typing.get_args(Ge0dot5)[1]
+    origin_type, annotated_type = typing.get_args(Ge0dot5)
     with pytest.raises(
         typeguard.TypeCheckError,
-        match=re.compile(
-            re.escape(match.format(value=value, annotated_type=annotated_type))
+        match=re.escape(
+            match.format(
+                value=value, annotated_type=annotated_type, origin_type=origin_type
+            )
         ),
     ):
         expects_ge0dot5(value)

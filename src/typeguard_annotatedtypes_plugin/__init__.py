@@ -92,18 +92,22 @@ def type_checker(checker):
         #     typecheck_fail_callback=memo.config.typecheck_fail_callback,
         #     collection_check_strategy=memo.config.collection_check_strategy,
         # )
-        # check_type_internal(
+        # tg.check_type_internal(
         #     value,
         #     origin_type,
         #     memo
         # )
+        if not isinstance(value, origin_type):
+            raise TypeCheckError(
+                f"{value!r} is not an instance of {origin_type.__name__}"
+            )
         try:
             check_ok = checker(value, origin_type, args, memo, constraint)
         except Exception as e:
-            raise TypeCheckError(f"with {value=!r} raised an error: {e!r}")
+            raise TypeCheckError(f"with value={value!r} raised an error: {e!r}")
         else:
             if not check_ok:
-                raise TypeCheckError(f"with {value=!r} failed {constraint}")
+                raise TypeCheckError(f"with value={value!r} failed {constraint}")
             return True
 
     return wrapper
