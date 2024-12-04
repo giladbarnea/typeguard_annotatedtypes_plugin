@@ -238,7 +238,7 @@ VALIDATORS: dict[Any, CheckerFn] = {
     at.Ge: check_ge,
     at.Le: check_le,
     at.MultipleOf: check_multiple_of,
-    at.Predicate: check_predicate,
+    # at.Predicate: check_predicate,
     at.Len: check_len,
     at.Timezone: check_timezone,
     slice: check_len,
